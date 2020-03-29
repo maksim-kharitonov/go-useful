@@ -1,1 +1,1 @@
-"# go-useful" 
+# Set of useful code fragments
