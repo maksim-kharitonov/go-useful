@@ -66,19 +66,16 @@ func (p *FixedPool) Get() (PooledObject, error) {
 
 			p.mu.Unlock()
 
-			for {
-				select {
-				case <-c:
-					p.mu.Lock()
-					obj, p.available = p.available[0], p.available[1:]
-					err = nil
-					break
-				case <-resTimeout:
-					err = errors.New("fixed Pool reached maximum capacity")
-					break
-				}
+			select {
+			case <-c:
+				p.mu.Lock()
+				obj, p.available = p.available[0], p.available[1:]
+				err = nil
+				break
+			case <-resTimeout:
+				err = errors.New("fixed Pool reached maximum capacity")
+				break
 			}
-
 
 		} else {
 			obj, err = p.factory.Create()
